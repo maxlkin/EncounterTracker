@@ -41,6 +41,7 @@ class CharacterView: View() {
         val tableData = controller.getCharacterList()
 
         tableview(tableData) {
+            readonlyColumn("ID", Character::id)
             readonlyColumn("Name", Character::name)
             readonlyColumn("Armor Class", Character::armor_class)
             readonlyColumn("Initiative Modifier", Character::initiative_modifier)
