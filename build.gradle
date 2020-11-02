@@ -1,0 +1,52 @@
+
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.squareup.sqldelight:gradle-plugin:1.4.3'
+    }
+
+
+
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+group 'org.wit.max'
+version '1.0-SNAPSHOT'
+apply plugin: 'kotlin-kapt'
+
+javafx {
+    version = "14"
+    modules = ["javafx.controls", "javafx.fxml", "javafx.graphics"]
+
+}
+repositories {
+    mavenCentral()
+    google()
+}
+compileKotlin {
+    kotlinOptions.jvmTarget= "14"
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation 'no.tornado:tornadofx:1.7.20'
+    implementation "com.squareup.sqldelight:sqlite-driver:1.2.2"
+}
+
+apply plugin: 'com.squareup.sqldelight'
+
+sqldelight {
+    Database { // This will be the name of the generated database class.
+        packageName = "encounter.tracker.db"
+    }
+}

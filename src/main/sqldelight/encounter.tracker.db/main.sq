@@ -1,0 +1,49 @@
+CREATE TABLE character (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    armor_class INTEGER NOT NULL,
+    initiative_modifier INTEGER NOT NULL,
+    max_health INTEGER NOT NULL,
+    current_health INTEGER NOT NULL
+);
+
+CREATE TABLE np_character (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER NOT NULL,
+    description TEXT,
+    FOREIGN KEY (character_id) REFERENCES character(id)
+);
+
+CREATE TABLE status (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    duration INTEGER,
+    magnitude INTEGER,
+    save INTEGER,
+    description TEXT
+);
+
+CREATE TABLE ability (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    npc_id INTEGER NOT NULL,
+    description TEXT,
+    type TEXT,
+    magnitude INTEGER,
+    hit_modifier INTEGER,
+    save INTEGER,
+    magnitude_modifier INTEGER,
+    status_id INTEGER,
+    FOREIGN KEY (status_id) REFERENCES status(id),
+    FOREIGN KEY (npc_id) REFERENCES np_character(id)
+);
+
+CREATE TABLE character_encounter_list (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER NOT NULL,
+    initiative INTEGER,
+    encounter_id INTEGER NOT NULL
+);
+
+CREATE TABLE encounter (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
