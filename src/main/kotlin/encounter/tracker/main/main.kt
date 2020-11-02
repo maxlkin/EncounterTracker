@@ -3,11 +3,12 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import encounter.tracker.db.Database
 import encounter.tracker.views.Root
+import encounter.tracker.views.Style
 import encountertrackerdb.MainQueries
 import tornadofx.App
 import tornadofx.launch
 
-class EncounterTracker: App(Root::class)
+class EncounterTracker: App(Root::class, Style::class)
 
 fun main(args: Array<String>) {
     // Getting database connection.
