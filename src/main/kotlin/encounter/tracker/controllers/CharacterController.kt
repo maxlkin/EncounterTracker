@@ -12,4 +12,9 @@ class CharacterController: Controller() {
         return Database.query().selectAllCharacters().executeAsList().asObservable()
     }
 
+    fun deleteCharacter(id: Long) {
+        println("Deleting character $id")
+        Database.query().deleteCharacterByID(id)
+    }
+
 }
