@@ -1,18 +1,12 @@
 package encounter.tracker.views
-import encounter.tracker.database.Database
+import encounter.tracker.controllers.CharacterController
 import encountertrackerdb.Character
-import encountertrackerdb.MainQueries
-import javafx.beans.property.ReadOnlyListProperty
-import javafx.scene.Parent
 import tornadofx.*
 
 class CharacterView: View() {
+    private val controller: CharacterController by inject()
     override val root = vbox {
-        label("Character view")
-        val characterList = Database.query().selectAllCharacters().executeAsList()
-        val characters = characterList.asObservable()
-
-        tableview(characters) {
+        tableview(controller.getCharacterList()) {
             readonlyColumn("ID",Character::id)
             readonlyColumn("Name", Character::name)
             readonlyColumn("Armor Class", Character::armor_class)
