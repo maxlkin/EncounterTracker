@@ -15,9 +15,8 @@ object Database {
         return JdbcSqliteDriver("jdbc:sqlite:database/encounter_tracker.db")
     }
 
-    fun query(): MainQueries {
-        //val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:database/encounter_tracker.db")
-        val database = Database(this.getConnection())
+    fun query(driver: JdbcSqliteDriver): MainQueries {
+        val database = Database(driver)
         return database.mainQueries
     }
 
@@ -25,10 +24,5 @@ object Database {
         val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         Database.Schema.create(driver)
         return driver
-    }
-
-    fun testQuery(driver: SqlDriver): MainQueries {
-        val database = Database(driver)
-        return database.mainQueries
     }
 }

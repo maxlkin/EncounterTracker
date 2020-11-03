@@ -1,5 +1,6 @@
 package encounter.tracker.controllers
 
+import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import encounter.tracker.database.Database
 import encounter.tracker.models.CharacterModel
 import encountertrackerdb.Character
@@ -10,18 +11,18 @@ import java.lang.Exception
 
 class CharacterController: Controller() {
 
-    fun getCharacterList(): ObservableList<Character> {
-        return Database.query().selectAllCharacters().executeAsList().asObservable()
+    fun getCharacterList(driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<Character> {
+        return Database.query(driver).selectAllCharacters().executeAsList().asObservable()
     }
 
-    fun getFilteredCharacterList(character: CharacterModel): ObservableList<Character> {
+    fun getFilteredCharacterList(character: CharacterModel, driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<Character> {
         val name = if (character.name == null || character.name.isEmpty()) "" else character.name
         val armorClass = if (character.armorClass == null) "" else character.armorClass.toString()
         val initiative = if (character.initiative == null) "" else character.initiative.toString()
         val maxHealth = if (character.maxHealth == null) "" else character.maxHealth.toString()
         val currentHealth = if (character.currentHealth == null) "" else character.currentHealth.toString()
 
-        return Database.query().selectCharacters(
+        return Database.query(driver).selectCharacters(
                 "%$name%",
                 "%$armorClass%",
                 "%$initiative%",
@@ -30,13 +31,13 @@ class CharacterController: Controller() {
         ).executeAsList().asObservable()
     }
 
-    fun deleteCharacter(id: Long) {
+    fun deleteCharacter(id: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
         println("Deleting character $id")
-        Database.query().deleteCharacterByID(id)
+        Database.query(driver).deleteCharacterByID(id)
     }
 
     @Throws(Exception::class)
-    fun addCharacter(character: CharacterModel) {
+    fun addCharacter(character: CharacterModel, driver: JdbcSqliteDriver = Database.getConnection()) {
         if (character.name == null || character.name.isEmpty()) {
             throw Exception("Name field cannot be empty.")
         }
@@ -53,7 +54,7 @@ class CharacterController: Controller() {
             throw Exception("Current health field cannot be empty or contain letters.")
         }
         println("Adding character ${character.name}")
-        Database.query().insertCharacter(
+        Database.query(driver).insertCharacter(
             character.name,
             character.armorClass,
             character.initiative,
@@ -63,7 +64,7 @@ class CharacterController: Controller() {
     }
 
     @Throws(Exception::class)
-    fun updateCharacter(character: CharacterModel) {
+    fun updateCharacter(character: CharacterModel, driver: JdbcSqliteDriver = Database.getConnection()) {
         if (character.name == null || character.name.isEmpty()) {
             throw Exception("Name field cannot be empty.")
         }
@@ -83,7 +84,7 @@ class CharacterController: Controller() {
             throw Exception("ID cannot be empty or contain letters when updating a character.")
         }
         println("Updating character ${character.id}")
-        Database.query().updateCharacterByID(
+        Database.query(driver).updateCharacterByID(
             character.name,
             character.armorClass,
             character.initiative,

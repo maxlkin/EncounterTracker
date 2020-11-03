@@ -18,8 +18,8 @@ class QueryTest {
     @Before
     fun setup() {
         driver = Database.getTestConnection()
-        Database.testQuery(driver).insertCharacter("TestChar1", 10, 2, 10, 6)
-        Database.testQuery(driver).insertCharacter("TestChar2", 5, -2, 10, 4)
+        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6)
+        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4)
     }
 
     /**
@@ -27,7 +27,7 @@ class QueryTest {
      */
     @Test
     fun testSelectCharacters() {
-        val characters = Database.testQuery(driver).selectAllCharacters().executeAsList()
+        val characters = Database.query(driver).selectAllCharacters().executeAsList()
         assertEquals(2, characters.size)
         assertEquals("TestChar1", characters[0].name)
         assertEquals("TestChar2", characters[1].name)
@@ -38,7 +38,7 @@ class QueryTest {
      */
     @Test
     fun testSelectCharacterByID() {
-        val character = Database.testQuery(driver).selectCharacterByID(1).executeAsOne()
+        val character = Database.query(driver).selectCharacterByID(1).executeAsOne()
         assertEquals("TestChar1", character.name)
     }
 
@@ -47,8 +47,8 @@ class QueryTest {
      */
     @Test
     fun testInsertCharacter() {
-        Database.testQuery(driver).insertCharacter("InsertCharTest", 0, 0, 0, 0)
-        val character = Database.testQuery(driver).selectCharacterByID(3).executeAsOne()
+        Database.query(driver).insertCharacter("InsertCharTest", 0, 0, 0, 0)
+        val character = Database.query(driver).selectCharacterByID(3).executeAsOne()
         assertEquals("InsertCharTest", character.name)
     }
 
@@ -57,8 +57,8 @@ class QueryTest {
      */
     @Test
     fun updateCharacterByID() {
-        Database.testQuery(driver).updateCharacterByID("UpdateCharTest", 10, -1, 9, 8, 2)
-        val character = Database.testQuery(driver).selectCharacterByID(2).executeAsOne()
+        Database.query(driver).updateCharacterByID("UpdateCharTest", 10, -1, 9, 8, 2)
+        val character = Database.query(driver).selectCharacterByID(2).executeAsOne()
         assertEquals("UpdateCharTest", character.name)
         assertEquals(10, character.armor_class)
         assertEquals(-1, character.initiative_modifier)
@@ -71,8 +71,8 @@ class QueryTest {
      */
     @Test
     fun deleteCharacterByID() {
-        Database.testQuery(driver).deleteCharacterByID(2)
-        val character = Database.testQuery(driver).selectCharacterByID(2).executeAsOneOrNull()
+        Database.query(driver).deleteCharacterByID(2)
+        val character = Database.query(driver).selectCharacterByID(2).executeAsOneOrNull()
         assertEquals(null, character)
     }
 }

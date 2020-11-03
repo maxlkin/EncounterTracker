@@ -16,7 +16,6 @@ class CharacterView: View() {
     var initiativeField : TextField by singleAssign()
     var maxHealthField : TextField by singleAssign()
     var currentHealthField : TextField by singleAssign()
-    //var selectedCharacter: Character by singleAssign()
     val tableData = controller.getCharacterList()
 
     override val root = vbox(10) {
