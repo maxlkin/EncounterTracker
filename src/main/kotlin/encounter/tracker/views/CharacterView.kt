@@ -16,6 +16,8 @@ class CharacterView: View() {
     var initiativeField : TextField by singleAssign()
     var maxHealthField : TextField by singleAssign()
     var currentHealthField : TextField by singleAssign()
+    var selectedCharacter: Character by singleAssign()
+    val tableData = controller.getCharacterList()
 
     override val root = vbox(10) {
         addClass(Style.view)
@@ -45,7 +47,23 @@ class CharacterView: View() {
         // Control Buttons
         hbox(20) {
             button("Filter")
-            button("Add Character")
+            button("Add Character") {
+                action {
+                    // Create character using form values
+                    // Leave ID as 0 as that is the databases job to assign
+                    val character = Character(
+                            0,
+                            nameField.text,
+                            armorClassField.text.toLong(),
+                            initiativeField.text.toLong(),
+                            maxHealthField.text.toLong(),
+                            currentHealthField.text.toLong(),
+                    )
+                    controller.addCharacter(character)
+                    idField.text = "-"
+                    tableData.setAll(controller.getCharacterList())
+                }
+            }
             button("Update Character")
             button("Clear Selection") {
                 action {
@@ -54,7 +72,7 @@ class CharacterView: View() {
             }
         }
         // Data Table
-        val tableData = controller.getCharacterList()
+
         tableview(tableData) {
             selectionModel.selectionMode = SelectionMode.SINGLE
             readonlyColumn("ID", Character::id)

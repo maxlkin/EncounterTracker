@@ -17,4 +17,15 @@ class CharacterController: Controller() {
         Database.query().deleteCharacterByID(id)
     }
 
+    fun addCharacter(character: Character) {
+        println("Adding character ${character.name}")
+        Database.query().insertCharacter(
+                character.name,
+                character.armor_class,
+                character.initiative_modifier,
+                character.max_health,
+                character.current_health
+        )
+    }
+
 }
