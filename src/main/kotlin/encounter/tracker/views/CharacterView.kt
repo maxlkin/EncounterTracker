@@ -18,14 +18,14 @@ class CharacterView: View() {
     var currentHealthField : TextField by singleAssign()
 
     override val root = vbox(10) {
-
-
         addClass(Style.view)
+        // Heading
         label("Characters") {
             style {
                 fontSize = 18.px
             }
         }
+        // Details Form
         form {
             fieldset("Character Details") {
                 vbox {
@@ -42,16 +42,19 @@ class CharacterView: View() {
                 }
             }
         }
-
+        // Control Buttons
         hbox(20) {
             button("Filter")
             button("Add Character")
             button("Update Character")
-            button("Clear Selection")
+            button("Clear Selection") {
+                action {
+                    clearSelection()
+                }
+            }
         }
-
+        // Data Table
         val tableData = controller.getCharacterList()
-
         tableview(tableData) {
             selectionModel.selectionMode = SelectionMode.SINGLE
             readonlyColumn("ID", Character::id)
@@ -70,6 +73,7 @@ class CharacterView: View() {
                     }
                 }
             }
+
             onLeftClick {
                 val character = this.selectedItem!!
                 idField.text = character.id.toString()
@@ -82,5 +86,14 @@ class CharacterView: View() {
                 currentHealthField.text = character.current_health.toString()
             }
         }
+    }
+
+    private fun clearSelection() {
+        idField.text = "-"
+        nameField.text = ""
+        armorClassField.text = ""
+        initiativeField.text = ""
+        maxHealthField.text = ""
+        currentHealthField.text = ""
     }
 }
