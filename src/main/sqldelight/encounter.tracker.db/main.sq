@@ -5,14 +5,15 @@ CREATE TABLE character (
     armor_class INTEGER NOT NULL,
     initiative_modifier INTEGER NOT NULL,
     max_health INTEGER NOT NULL,
-    current_health INTEGER NOT NULL
+    current_health INTEGER NOT NULL,
+    character_template_id INTEGER,
+    FOREIGN KEY (character_template_id) REFERENCES characterTemplate(id)
 );
 
-CREATE TABLE np_character (
+CREATE TABLE characterTemplate (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    character_id INTEGER NOT NULL,
-    description TEXT,
-    FOREIGN KEY (character_id) REFERENCES character(id)
+    type TEXT,
+    description TEXT
 );
 
 CREATE TABLE status (
@@ -26,7 +27,7 @@ CREATE TABLE status (
 
 CREATE TABLE ability (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    npc_id INTEGER NOT NULL,
+    character_template_id INTEGER NOT NULL,
     description TEXT,
     type TEXT,
     magnitude INTEGER,
@@ -35,10 +36,10 @@ CREATE TABLE ability (
     magnitude_modifier INTEGER,
     status_id INTEGER,
     FOREIGN KEY (status_id) REFERENCES status(id),
-    FOREIGN KEY (npc_id) REFERENCES np_character(id)
+    FOREIGN KEY (character_template_id) REFERENCES characterTemplate(id)
 );
 
-CREATE TABLE character_encounter_list (
+CREATE TABLE characterEncounterList (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     character_id INTEGER NOT NULL,
     initiative INTEGER,
@@ -51,14 +52,15 @@ CREATE TABLE encounter (
 );
 
 -- Creating Queries
+
 -- Characters
 selectAllCharacters:
 SELECT *
 FROM character;
 
 insertCharacter:
-INSERT INTO character( name, armor_class, initiative_modifier, max_health, current_health )
-VALUES ( ?, ?, ?, ?, ? );
+INSERT INTO character( name, armor_class, initiative_modifier, max_health, current_health, character_template_id )
+VALUES ( ?, ?, ?, ?, ?, ? );
 
 selectCharacterByID:
 SELECT *
@@ -78,3 +80,33 @@ selectCharacters:
 SELECT *
 FROM character
 WHERE name LIKE ? AND armor_class LIKE ? AND initiative_modifier LIKE ? AND max_health LIKE ? AND current_health LIKE ?;
+
+-- PC's
+selectAllPlayerCharacters:
+SELECT *
+FROM character
+WHERE character_template_id IS NULL;
+
+selectPlayerCharacters:
+SELECT *
+FROM character
+WHERE name LIKE ? AND armor_class LIKE ? AND initiative_modifier LIKE ? AND max_health LIKE ? AND current_health LIKE ?
+AND character_template_id IS NULL;
+
+-- NPC's
+selectAllCharactersWithTemplate:
+SELECT *
+FROM character
+INNER JOIN characterTemplate
+ON character.character_template_id = characterTemplate.id;
+
+selectCharactersWithTemplate:
+SELECT *
+FROM character
+LEFT JOIN characterTemplate
+ON character.character_template_id = characterTemplate.id
+WHERE name LIKE ? AND armor_class LIKE ? AND initiative_modifier LIKE ? AND max_health LIKE ? AND current_health LIKE ? AND description LIKE ?;
+
+insertCharacterTemplate:
+INSERT INTO characterTemplate( type, description )
+VALUES ( ?, ? );

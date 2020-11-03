@@ -59,7 +59,8 @@ class CharacterController: Controller() {
             character.armorClass,
             character.initiative,
             character.maxHealth,
-            character.currentHealth
+            character.currentHealth,
+            null
         )
     }
 

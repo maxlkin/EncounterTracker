@@ -18,8 +18,9 @@ class QueryTest {
     @Before
     fun setup() {
         driver = Database.getTestConnection()
-        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6)
-        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4)
+        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null)
+        Database.query(driver).insertCharacterTemplate("Goblin", "A testing goblin template.")
+        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4, 1)
     }
 
     /**
@@ -47,7 +48,7 @@ class QueryTest {
      */
     @Test
     fun testInsertCharacter() {
-        Database.query(driver).insertCharacter("InsertCharTest", 0, 0, 0, 0)
+        Database.query(driver).insertCharacter("InsertCharTest", 0, 0, 0, 0, null)
         val character = Database.query(driver).selectCharacterByID(3).executeAsOne()
         assertEquals("InsertCharTest", character.name)
     }
@@ -74,5 +75,37 @@ class QueryTest {
         Database.query(driver).deleteCharacterByID(2)
         val character = Database.query(driver).selectCharacterByID(2).executeAsOneOrNull()
         assertEquals(null, character)
+    }
+
+    /**
+     * Test selecting only player characters.
+     */
+    @Test
+    fun selectAllPlayerCharacters() {
+        val characters = Database.query(driver).selectAllPlayerCharacters().executeAsList()
+        assertEquals(1, characters.size)
+    }
+
+    /**
+     * Test selecting filtered player characters.
+     */
+    @Test
+    fun selectPlayerCharacters() {
+        val characters = Database.query(driver).selectPlayerCharacters(
+            "%TestChar%",
+            "%%",
+            "%%",
+            "%%",
+            "%%").executeAsList()
+        assertEquals(1, characters.size)
+    }
+
+    /**
+     * Test selecting all non player characters.
+     */
+    @Test
+    fun selectAllNPCharacters() {
+        val characters = Database.query(driver).selectAllCharactersWithTemplate().executeAsList()
+        assertEquals(1, characters.size)
     }
 }

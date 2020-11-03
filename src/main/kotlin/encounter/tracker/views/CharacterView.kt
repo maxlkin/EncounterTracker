@@ -93,7 +93,9 @@ class CharacterView: View() {
                 graphic = hbox(spacing = 5) {
                     button("Delete") {
                         action {
+                            // Delete character
                             controller.deleteCharacter(it)
+                            // Reload table
                             tableData.setAll(controller.getCharacterList())
                         }
                     }
