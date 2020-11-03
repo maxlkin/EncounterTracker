@@ -41,6 +41,9 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation 'no.tornado:tornadofx:1.7.20'
     implementation "com.squareup.sqldelight:sqlite-driver:1.2.2"
+    testCompile "junit:junit:4.12"
+    testCompile "org.jetbrains.kotlin:kotlin-test"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
 }
 
 apply plugin: 'com.squareup.sqldelight'

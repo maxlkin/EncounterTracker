@@ -50,14 +50,7 @@ CREATE TABLE encounter (
     name TEXT
 );
 
--- Inserting data
-INSERT INTO character ( name, armor_class, initiative_modifier, max_health, current_health )
-VALUES ('Gentrim Gooseberry', 10, 2, 20, 20);
-INSERT INTO character ( name, armor_class, initiative_modifier, max_health, current_health )
-VALUES ('Vela Velis', 9, 3, 16, 16);
-
 -- Creating Queries
-
 -- Characters
 selectAllCharacters:
 SELECT *

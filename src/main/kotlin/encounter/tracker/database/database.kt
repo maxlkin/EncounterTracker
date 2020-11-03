@@ -20,4 +20,15 @@ object Database {
         val database = Database(this.getConnection())
         return database.mainQueries
     }
+
+    fun getTestConnection(): JdbcSqliteDriver {
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        Database.Schema.create(driver)
+        return driver
+    }
+
+    fun testQuery(driver: SqlDriver): MainQueries {
+        val database = Database(driver)
+        return database.mainQueries
+    }
 }
