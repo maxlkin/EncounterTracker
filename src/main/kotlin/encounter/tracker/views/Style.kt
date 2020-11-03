@@ -6,8 +6,12 @@ import tornadofx.*
 class Style: Stylesheet() {
     companion object {
         val sidebar by cssclass()
+        val view by cssclass()
     }
     init {
+        view {
+            padding = box(10.px)
+        }
         sidebar {
             backgroundColor += c("#dddddd")
             minWidth = 150.px
@@ -27,4 +31,6 @@ class Style: Stylesheet() {
             }
         }
     }
+
+
 }
