@@ -1,11 +1,9 @@
 package encounter.tracker.views
 import encounter.tracker.controllers.CharacterController
 import encountertrackerdb.Character
-import javafx.geometry.Pos
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TextField
 import tornadofx.*
-import tornadofx.WizardStyles.Companion.graphic
 
 class CharacterView: View() {
     private val controller: CharacterController by inject()
@@ -16,7 +14,7 @@ class CharacterView: View() {
     var initiativeField : TextField by singleAssign()
     var maxHealthField : TextField by singleAssign()
     var currentHealthField : TextField by singleAssign()
-    var selectedCharacter: Character by singleAssign()
+    //var selectedCharacter: Character by singleAssign()
     val tableData = controller.getCharacterList()
 
     override val root = vbox(10) {
@@ -49,22 +47,17 @@ class CharacterView: View() {
             button("Filter")
             button("Add Character") {
                 action {
-                    // Create character using form values
-                    // Leave ID as 0 as that is the databases job to assign
-                    val character = Character(
-                            0,
-                            nameField.text,
-                            armorClassField.text.toLong(),
-                            initiativeField.text.toLong(),
-                            maxHealthField.text.toLong(),
-                            currentHealthField.text.toLong(),
-                    )
-                    controller.addCharacter(character)
+                    controller.addCharacter(getSelectedCharacter())
                     idField.text = "-"
                     tableData.setAll(controller.getCharacterList())
                 }
             }
-            button("Update Character")
+            button("Update Character"){
+                action {
+                    controller.updateCharacter(getSelectedCharacter())
+                    tableData.setAll(controller.getCharacterList())
+                }
+            }
             button("Clear Selection") {
                 action {
                     clearSelection()
@@ -104,6 +97,17 @@ class CharacterView: View() {
                 currentHealthField.text = character.current_health.toString()
             }
         }
+    }
+
+    private fun getSelectedCharacter() : Character {
+        return Character(
+                idField.text.toLong(),
+                nameField.text,
+                armorClassField.text.toLong(),
+                initiativeField.text.toLong(),
+                maxHealthField.text.toLong(),
+                currentHealthField.text.toLong(),
+        )
     }
 
     private fun clearSelection() {

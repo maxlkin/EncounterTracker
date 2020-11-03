@@ -20,11 +20,23 @@ class CharacterController: Controller() {
     fun addCharacter(character: Character) {
         println("Adding character ${character.name}")
         Database.query().insertCharacter(
-                character.name,
-                character.armor_class,
-                character.initiative_modifier,
-                character.max_health,
-                character.current_health
+            character.name,
+            character.armor_class,
+            character.initiative_modifier,
+            character.max_health,
+            character.current_health
+        )
+    }
+
+    fun updateCharacter(character: Character) {
+        println("Updating character ${character.id}")
+        Database.query().updateCharacterByID(
+            character.name,
+            character.armor_class,
+            character.initiative_modifier,
+            character.max_health,
+            character.current_health,
+            character.id
         )
     }
 
