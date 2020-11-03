@@ -44,7 +44,11 @@ class CharacterView: View() {
         }
         // Control Buttons
         hbox(20) {
-            button("Filter")
+            button("Filter") {
+                action {
+                    tableData.setAll(controller.getFilteredCharacterList(getSelectedCharacter()))
+                }
+            }
             button("Add Character") {
                 action {
                     controller.addCharacter(getSelectedCharacter())
@@ -61,6 +65,7 @@ class CharacterView: View() {
             button("Clear Selection") {
                 action {
                     clearSelection()
+                    tableData.setAll(controller.getCharacterList())
                 }
             }
         }

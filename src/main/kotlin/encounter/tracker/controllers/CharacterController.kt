@@ -12,6 +12,16 @@ class CharacterController: Controller() {
         return Database.query().selectAllCharacters().executeAsList().asObservable()
     }
 
+    fun getFilteredCharacterList(character: Character): ObservableList<Character> {
+        return Database.query().selectCharacters(
+                "%" + character.name + "%",
+                "%" + character.armor_class.toString() + "%",
+                "%" + character.initiative_modifier.toString() + "%",
+                "%" + character.max_health.toString() + "%",
+                "%" + character.current_health.toString() + "%"
+        ).executeAsList().asObservable()
+    }
+
     fun deleteCharacter(id: Long) {
         println("Deleting character $id")
         Database.query().deleteCharacterByID(id)

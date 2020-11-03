@@ -80,3 +80,8 @@ WHERE id = ?;
 deleteCharacterByID:
 DELETE FROM character
 WHERE id = ?;
+
+selectCharacters:
+SELECT *
+FROM character
+WHERE name LIKE ? AND armor_class LIKE ? AND initiative_modifier LIKE ? AND max_health LIKE ? AND current_health LIKE ?;
