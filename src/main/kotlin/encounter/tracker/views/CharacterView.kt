@@ -1,6 +1,8 @@
 package encounter.tracker.views
 import encounter.tracker.controllers.CharacterController
+import encounter.tracker.models.CharacterModel
 import encountertrackerdb.Character
+import javafx.scene.control.Alert
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TextField
 import tornadofx.*
@@ -51,26 +53,35 @@ class CharacterView: View() {
             }
             button("Add Character") {
                 action {
-                    controller.addCharacter(getSelectedCharacter())
+                    try {
+                        controller.addCharacter(getSelectedCharacter())
+                    } catch (e: Exception) {
+                        alert(Alert.AlertType.ERROR, "There was a problem creating the character", e.message)
+                    }
                     idField.text = "-"
                     tableData.setAll(controller.getCharacterList())
                 }
             }
             button("Update Character"){
                 action {
-                    controller.updateCharacter(getSelectedCharacter())
+                    try {
+                        controller.updateCharacter(getSelectedCharacter())
+                    } catch (e: Exception) {
+                        alert(Alert.AlertType.ERROR, "There was a problem updating the character", e.message)
+                    }
                     tableData.setAll(controller.getCharacterList())
                 }
             }
             button("Clear Selection") {
                 action {
                     clearSelection()
+                    idField.isEditable = true
+                    idField.isDisable = false
                     tableData.setAll(controller.getCharacterList())
                 }
             }
         }
         // Data Table
-
         tableview(tableData) {
             selectionModel.selectionMode = SelectionMode.SINGLE
             readonlyColumn("ID", Character::id)
@@ -91,27 +102,55 @@ class CharacterView: View() {
             }
 
             onLeftClick {
-                val character = this.selectedItem!!
-                idField.text = character.id.toString()
-                idField.setEditable(false)
-                idField.setDisable(true)
-                nameField.text = character.name
-                armorClassField.text = character.armor_class.toString()
-                initiativeField.text = character.initiative_modifier.toString()
-                maxHealthField.text = character.max_health.toString()
-                currentHealthField.text = character.current_health.toString()
+                if (this.selectedItem != null) {
+                    val character = this.selectedItem!!
+                    idField.text = character.id.toString()
+                    idField.isEditable = false
+                    idField.isDisable = true
+                    nameField.text = character.name
+                    armorClassField.text = character.armor_class.toString()
+                    initiativeField.text = character.initiative_modifier.toString()
+                    maxHealthField.text = character.max_health.toString()
+                    currentHealthField.text = character.current_health.toString()
+                }
             }
         }
     }
 
-    private fun getSelectedCharacter() : Character {
-        return Character(
-                idField.text.toLong(),
+    private fun getSelectedCharacter() : CharacterModel {
+        val id : Long? = try {
+            idField.text.toLong()
+        } catch (e : NumberFormatException ) {
+            null
+        }
+        val armorClass : Long? = try {
+            armorClassField.text.toLong()
+        } catch (e : NumberFormatException ) {
+            null
+        }
+        val initiative : Long? = try {
+            initiativeField.text.toLong()
+        } catch (e : NumberFormatException ) {
+            null
+        }
+        val maxHealth : Long? = try {
+            maxHealthField.text.toLong()
+        } catch (e : NumberFormatException ) {
+            null
+        }
+        val currentHealth : Long? = try {
+            currentHealthField.text.toLong()
+        } catch (e : NumberFormatException ) {
+            null
+        }
+
+        return CharacterModel(
+                id,
                 nameField.text,
-                armorClassField.text.toLong(),
-                initiativeField.text.toLong(),
-                maxHealthField.text.toLong(),
-                currentHealthField.text.toLong(),
+                armorClass,
+                initiative,
+                maxHealth,
+                currentHealth,
         )
     }
 
