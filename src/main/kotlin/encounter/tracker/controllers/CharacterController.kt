@@ -91,6 +91,7 @@ class CharacterController: Controller() {
             character.initiative,
             character.maxHealth,
             character.currentHealth,
+            null,
             character.id
         )
     }

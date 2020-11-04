@@ -58,7 +58,7 @@ class QueryTest {
      */
     @Test
     fun updateCharacterByID() {
-        Database.query(driver).updateCharacterByID("UpdateCharTest", 10, -1, 9, 8, 2)
+        Database.query(driver).updateCharacterByID("UpdateCharTest", 10, -1, 9, 8, null, 2)
         val character = Database.query(driver).selectCharacterByID(2).executeAsOne()
         assertEquals("UpdateCharTest", character.name)
         assertEquals(10, character.armor_class)
