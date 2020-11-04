@@ -13,7 +13,11 @@ class Sidebar : View() {
                 parentClass.setCharacterView()
             }
         }
-        //parentClass.setCharacters()
+        button("Templates") {
+            action {
+                parentClass.setTemplateView()
+            }
+        }
         button("NPC's") {
             action {
                 parentClass.setNPCView()

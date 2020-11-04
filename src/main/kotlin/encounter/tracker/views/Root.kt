@@ -19,6 +19,10 @@ class Root: View() {
         root.center<NPCView>()
     }
 
+    fun setTemplateView() {
+        root.center<TemplateView>()
+    }
+
     fun setEncounterView() {
         root.center<EncounterView>()
     }

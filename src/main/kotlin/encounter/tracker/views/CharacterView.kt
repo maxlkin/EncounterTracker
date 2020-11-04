@@ -152,6 +152,7 @@ class CharacterView: View() {
                 initiative,
                 maxHealth,
                 currentHealth,
+                null
         )
     }
 

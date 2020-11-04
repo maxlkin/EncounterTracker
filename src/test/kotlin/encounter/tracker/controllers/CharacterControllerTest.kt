@@ -36,7 +36,7 @@ class CharacterControllerTest {
 
     @Test
     fun testGetFilteredCharacterList() {
-        val characterModel = CharacterModel(0, "TestChar2", 5, -2, 10, 4)
+        val characterModel = CharacterModel(0, "TestChar2", 5, -2, 10, 4, null)
         val characters = controller.getFilteredCharacterList(characterModel, driver)
         assertEquals("TestChar2", characters[0].name)
     }
@@ -50,7 +50,7 @@ class CharacterControllerTest {
 
     @Test
     fun testAddCharacter() {
-        val characterModel = CharacterModel(0, "InsertCharTest", 10, -2, 20, 10)
+        val characterModel = CharacterModel(0, "InsertCharTest", 10, -2, 20, 10, null)
         controller.addCharacter(characterModel, driver)
         val characters = controller.getCharacterList(driver)
         assertEquals("InsertCharTest", characters[2].name)
@@ -58,7 +58,7 @@ class CharacterControllerTest {
 
     @Test
     fun testUpdateCharacter() {
-        val characterModel = CharacterModel(2, "UpdateCharTest", 10, -2, 20, 10)
+        val characterModel = CharacterModel(2, "UpdateCharTest", 10, -2, 20, 10, null)
         controller.updateCharacter(characterModel, driver)
         val characters = controller.getCharacterList(driver)
         assertEquals("UpdateCharTest", characters[1].name)

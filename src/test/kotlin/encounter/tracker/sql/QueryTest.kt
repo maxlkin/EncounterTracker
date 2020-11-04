@@ -19,7 +19,7 @@ class QueryTest {
     fun setup() {
         driver = Database.getTestConnection()
         Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null)
-        Database.query(driver).insertCharacterTemplate("Goblin", "A testing goblin template.")
+        Database.query(driver).insertTemplate("Goblin", "A testing goblin template.")
         Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4, 1)
     }
 
