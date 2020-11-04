@@ -6,5 +6,6 @@ data class CharacterModel(
         val armorClass: Long?,
         val initiative: Long?,
         val maxHealth: Long?,
-        val currentHealth: Long?
+        val currentHealth: Long?,
+        val characterTemplateID: Long?
 )

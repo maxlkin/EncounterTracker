@@ -1,14 +1,16 @@
 package encounter.tracker.views
-import encounter.tracker.controllers.CharacterController
+import encounter.tracker.controllers.NonPlayerCharacterController
 import encounter.tracker.models.CharacterModel
-import encountertrackerdb.Character
+import encounter.tracker.models.CharacterTemplateComboModel
+import encountertrackerdb.CharacterTemplate
 import javafx.scene.control.Alert
+import javafx.scene.control.ComboBox
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TextField
 import tornadofx.*
 
-class CharacterView: View() {
-    private val controller: CharacterController by inject()
+class NPCharacterView: View() {
+    private val controller: NonPlayerCharacterController by inject()
 
     var idField : TextField by singleAssign()
     var nameField : TextField by singleAssign()
@@ -16,9 +18,13 @@ class CharacterView: View() {
     var initiativeField : TextField by singleAssign()
     var maxHealthField : TextField by singleAssign()
     var currentHealthField : TextField by singleAssign()
+    var typeField : ComboBox<CharacterTemplate> by singleAssign()
+    var descriptionField : TextField by singleAssign()
     val tableData = controller.getCharacterList()
+    var selectedTemplate : CharacterTemplate by singleAssign()
 
     override val root = vbox(10) {
+
         addClass(Style.view)
         // Heading
         label("Characters") {
@@ -40,6 +46,23 @@ class CharacterView: View() {
                         field("Max Health") { textfield() { maxHealthField = this } }
                         field("Current Health") { textfield() { currentHealthField = this } }
                     }
+                    hbox(20) {
+                        field("Type") {
+                            combobox<CharacterTemplate> {
+                                items = controller.getTemplates()
+                                typeField = this
+                                cellFormat {
+                                    text = it.type
+                                }
+                                setOnAction {
+                                    descriptionField.text = this.selectedItem?.description
+                                }
+                            }
+                        }
+                        field("Description") { textfield() { descriptionField = this } }
+                        descriptionField.text = ""
+                        descriptionField.isEditable = false
+                    }
                 }
             }
         }
@@ -57,7 +80,7 @@ class CharacterView: View() {
                     } catch (e: Exception) {
                         alert(Alert.AlertType.ERROR, "There was a problem creating the character", e.message)
                     }
-                    idField.text = "-"
+                    idField.text = ""
                     tableData.setAll(controller.getCharacterList())
                 }
             }
@@ -83,18 +106,26 @@ class CharacterView: View() {
         // Data Table
         tableview(tableData) {
             selectionModel.selectionMode = SelectionMode.SINGLE
-            readonlyColumn("ID", Character::id)
-            readonlyColumn("Name", Character::name)
-            readonlyColumn("Armor Class", Character::armor_class)
-            readonlyColumn("Initiative Modifier", Character::initiative_modifier)
-            readonlyColumn("Max Health", Character::max_health)
-            readonlyColumn("Current Health", Character::current_health)
-            readonlyColumn("Action", Character::id).cellFormat {
+            readonlyColumn("ID", CharacterModel::id)
+            readonlyColumn("Name", CharacterModel::name)
+            readonlyColumn("Armor Class", CharacterModel::armorClass)
+            readonlyColumn("Initiative Modifier", CharacterModel::initiative)
+            readonlyColumn("Max Health", CharacterModel::maxHealth)
+            readonlyColumn("Current Health", CharacterModel::currentHealth)
+            readonlyColumn("Template", CharacterModel::characterTemplateID).cellFormat {
+                val template = it?.let { it1 -> controller.getTemplateByID(it1) }
+                if (template != null) {
+                    graphic = label(template.type ?: "")
+                }
+            }
+            readonlyColumn("Action", CharacterModel::id).cellFormat {
                 graphic = hbox(spacing = 5) {
                     button("Delete") {
                         action {
                             // Delete character
-                            controller.deleteCharacter(it)
+                            if (it != null) {
+                                controller.deleteCharacter(it)
+                            }
                             // Reload table
                             tableData.setAll(controller.getCharacterList())
                         }
@@ -109,16 +140,16 @@ class CharacterView: View() {
                     idField.isEditable = false
                     idField.isDisable = true
                     nameField.text = character.name
-                    armorClassField.text = character.armor_class.toString()
-                    initiativeField.text = character.initiative_modifier.toString()
-                    maxHealthField.text = character.max_health.toString()
-                    currentHealthField.text = character.current_health.toString()
+                    armorClassField.text = character.armorClass.toString()
+                    initiativeField.text = character.initiative.toString()
+                    maxHealthField.text = character.maxHealth.toString()
+                    currentHealthField.text = character.currentHealth.toString()
                 }
             }
         }
     }
 
-    private fun getSelectedCharacter() : CharacterModel {
+   private fun getSelectedCharacter() : CharacterModel {
         val id : Long? = try {
             idField.text.toLong()
         } catch (e : NumberFormatException ) {
@@ -144,6 +175,11 @@ class CharacterView: View() {
         } catch (e : NumberFormatException ) {
             null
         }
+        val characterTemplateID : Long? = try {
+            typeField.selectedItem?.id
+        } catch (e : NumberFormatException ) {
+           null
+        }
 
         return CharacterModel(
                 id,
@@ -152,12 +188,11 @@ class CharacterView: View() {
                 initiative,
                 maxHealth,
                 currentHealth,
-                null
+                characterTemplateID
         )
     }
-
     private fun clearSelection() {
-        idField.text = "-"
+        idField.text = ""
         nameField.text = ""
         armorClassField.text = ""
         initiativeField.text = ""

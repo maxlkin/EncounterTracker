@@ -4,15 +4,18 @@ import encounter.tracker.views.Root
 import encounter.tracker.views.Style
 import tornadofx.App
 import tornadofx.launch
-
+import mu.KotlinLogging
 class EncounterTracker: App(Root::class, Style::class)
+private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
-    //
-    Database.query().insertCharacter("Johnny Two Fingers", 12, 1, 20, 20)
-    Database.query().updateCharacterByID("Johnny Three Fingers", 12, 1, 20, 20, 3)
-    println(Database.query().selectCharacterByID(1).executeAsList())
-    println(Database.query().selectAllCharacters().executeAsList())
+    // Checking database setup
+    //val driver = Database.getConnection()
+    try {
+        Database.setup()
+    } catch (e: Exception) {
+        logger.info("Skipping database setup. May already exist.")
+    }
     // Launching App (TornadoFX)
     launch<EncounterTracker>(args)
 }

@@ -27,12 +27,13 @@ apply plugin: 'kotlin-kapt'
 javafx {
     version = "14"
     modules = ["javafx.controls", "javafx.fxml", "javafx.graphics"]
-
 }
+
 repositories {
     mavenCentral()
     google()
 }
+
 compileKotlin {
     kotlinOptions.jvmTarget= "14"
 }
@@ -41,6 +42,11 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation 'no.tornado:tornadofx:1.7.20'
     implementation "com.squareup.sqldelight:sqlite-driver:1.2.2"
+    implementation 'io.github.microutils:kotlin-logging:1.6.22'
+    implementation 'org.slf4j:slf4j-simple:1.6.1'
+    testCompile "junit:junit:4.12"
+    testCompile "org.jetbrains.kotlin:kotlin-test"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
 }
 
 apply plugin: 'com.squareup.sqldelight'
