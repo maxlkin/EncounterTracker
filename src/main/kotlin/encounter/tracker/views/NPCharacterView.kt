@@ -49,7 +49,7 @@ class NPCharacterView: View() {
                     hbox(20) {
                         field("Type") {
                             combobox<CharacterTemplate> {
-                                items = controller.getTemplates()
+                                items.setAll(controller.getTemplates())
                                 typeField = this
                                 cellFormat {
                                     text = it.type
