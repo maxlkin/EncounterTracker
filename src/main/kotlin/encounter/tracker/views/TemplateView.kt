@@ -44,7 +44,7 @@ class TemplateView : View() {
                     tableData.setAll(controller.getFilteredTemplateList(getSelectedTemplate()))
                 }
             }
-            button("Add Character") {
+            button("Add Template") {
                 action {
                     try {
                         controller.addTemplate(getSelectedTemplate())
@@ -55,7 +55,7 @@ class TemplateView : View() {
                     tableData.setAll(controller.getTemplateList())
                 }
             }
-            button("Update Character"){
+            button("Update Template"){
                 action {
                     try {
                         controller.updateTemplate(getSelectedTemplate())
