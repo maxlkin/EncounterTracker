@@ -61,8 +61,8 @@ FROM character
 WHERE character_template_id IS NULL;
 
 insertCharacter:
-INSERT INTO character( name, armor_class, initiative_modifier, max_health, current_health, character_template_id )
-VALUES ( ?, ?, ?, ?, ?, ? );
+INSERT INTO character( name, armor_class, initiative_modifier, max_health, current_health, character_template_id, copy )
+VALUES ( ?, ?, ?, ?, ?, ?, ? );
 
 selectCharacterByID:
 SELECT *
@@ -186,3 +186,12 @@ setInitiative:
 UPDATE characterEncounterList
 SET initiative = ?
 WHERE id = ?;
+
+selectCharacterListing:
+SELECT *
+FROM characterEncounterList
+WHERE id = ?;
+
+-- Helper
+lastInsertRowId:
+SELECT last_insert_rowid();

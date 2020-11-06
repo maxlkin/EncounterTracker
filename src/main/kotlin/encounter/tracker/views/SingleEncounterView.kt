@@ -94,7 +94,7 @@ class SingleEncounterView :  View() {
                             button("Add") {
                                 action {
                                     println("Adding character $it to encounter ${this@SingleEncounterView.id.value}")
-                                    controller.addCharacterToEncounter(it, this@SingleEncounterView.id.value)
+                                    controller.addCharacterToEncounter(it, this@SingleEncounterView.id.value, true)
                                     refreshEncounterCharacters()
                                 }
                             }

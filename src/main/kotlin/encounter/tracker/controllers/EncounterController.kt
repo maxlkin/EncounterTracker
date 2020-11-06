@@ -25,11 +25,36 @@ class EncounterController: Controller() {
         return Database.query(driver).selectAllCharactersWithTemplate().executeAsList().asObservable()
     }
 
-    fun addCharacterToEncounter(characterID: Long, encounterID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
-        Database.query(driver).addCharacterToEncounter(characterID, encounterID)
+    /**
+     *
+     */
+    fun addCharacterToEncounter(characterID: Long, encounterID: Long, copy: Boolean = false,  driver: JdbcSqliteDriver = Database.getConnection()) {
+        if (copy) {
+            // Add a copy of a character
+            val character = Database.query(driver).selectCharacterByID(characterID).executeAsOne()
+            // Insert copy
+            Database.query(driver).insertCharacter(character.name, character.armor_class, character.initiative_modifier, character.max_health, character.current_health, character.character_template_id, character.id)
+            val copy_id = Database.query(driver).lastInsertRowId().executeAsOne()
+            // Add copy to encounter
+            Database.query(driver).addCharacterToEncounter(copy_id, encounterID)
+        } else {
+            // Add original character
+            Database.query(driver).addCharacterToEncounter(characterID, encounterID)
+        }
     }
 
     fun removeCharacterFromEncounter(listID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
+        val listing = Database.query(driver).selectCharacterListing(listID).executeAsOne()
+        val character = Database.query(driver).selectCharacterByID(listing.character_id).executeAsOne()
+
+        if (character.copy == null) {
+            // Remove normally
+            Database.query(driver).removeCharacterFromEncounter(listID)
+        } else {
+            // Remove copied character as well as listing.
+            Database.query(driver).removeCharacterFromEncounter(listID)
+            Database.query(driver).removeCharacterFromEncounter(character.id)
+        }
         Database.query(driver).removeCharacterFromEncounter(listID)
     }
 
