@@ -9,6 +9,8 @@ import javafx.collections.ObservableList
 import tornadofx.Controller
 import tornadofx.asObservable
 import java.lang.Exception
+import javax.xml.crypto.Data
+import kotlin.random.Random
 
 class EncounterController: Controller() {
     fun getEncounterList(driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<Encounter> {
@@ -19,12 +21,16 @@ class EncounterController: Controller() {
         return Database.query(driver).selectEncounterByID(id).executeAsOne()
     }
 
-    fun getNpcList(id: Long , driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<SelectNPCNotIn> {
-        return Database.query(driver).selectNPCNotIn(id).executeAsList().asObservable()
+    fun getNpcList(driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<SelectAllCharactersWithTemplate> {
+        return Database.query(driver).selectAllCharactersWithTemplate().executeAsList().asObservable()
     }
 
     fun addCharacterToEncounter(characterID: Long, encounterID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
         Database.query(driver).addCharacterToEncounter(characterID, encounterID)
+    }
+
+    fun removeCharacterFromEncounter(listID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
+        Database.query(driver).removeCharacterFromEncounter(listID)
     }
 
     fun getEncounterCharacters(encounterID: Long, driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<SelectCharactersIn> {
@@ -34,6 +40,27 @@ class EncounterController: Controller() {
     fun getCharacterList(id: Long , driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<SelectCharactersNotIn> {
         return Database.query(driver).selectCharactersNotIn(id).executeAsList().asObservable()
     }
+
+    fun rollInitiative(encounterID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
+        val characters = getEncounterCharacters(encounterID)
+        characters.forEach {
+            val initiative = Random.nextInt(1, 20) + it.initiative_modifier
+            println("Rolled $initiative initiative.")
+            Database.query(driver).setInitiative(initiative, it.id_)
+        }
+    }
+
+    fun rollNulledInitiative(encounterID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
+        val characters = getEncounterCharacters(encounterID)
+        characters.forEach {
+            if (it.initiative == null) {
+                val initiative = Random.nextInt(1, 20) + it.initiative_modifier
+                println("Rolled $initiative initiative.")
+                Database.query(driver).setInitiative(initiative, it.id_)
+            }
+        }
+    }
+
 
     @Throws(Exception::class)
     fun addEncounter(encounter: EncounterModel, driver: JdbcSqliteDriver = Database.getConnection()) {

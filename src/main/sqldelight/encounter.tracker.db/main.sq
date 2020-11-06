@@ -177,3 +177,12 @@ WHERE encounter_id = ?;
 addCharacterToEncounter:
 INSERT INTO characterEncounterList ( character_id, encounter_id )
 VALUES ( ?, ? );
+
+removeCharacterFromEncounter:
+DELETE FROM characterEncounterList
+WHERE id = ?;
+
+setInitiative:
+UPDATE characterEncounterList
+SET initiative = ?
+WHERE id = ?;

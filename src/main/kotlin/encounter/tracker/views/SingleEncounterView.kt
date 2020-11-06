@@ -1,10 +1,7 @@
 package encounter.tracker.views
 
 import encounter.tracker.controllers.EncounterController
-import encountertrackerdb.Encounter
-import encountertrackerdb.SelectCharactersIn
-import encountertrackerdb.SelectCharactersNotIn
-import encountertrackerdb.SelectNPCNotIn
+import encountertrackerdb.*
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
@@ -16,23 +13,10 @@ class SingleEncounterView :  View() {
 
     private var encounterName : SimpleStringProperty = SimpleStringProperty("Unset")
     private var id : SimpleLongProperty = SimpleLongProperty(0)
-    var idField : TextField by singleAssign()
-    var nameField : TextField by singleAssign()
 
-
-    fun setEncounter(encounterID: Long) {
-        val query = controller.getEncounterByID(encounterID)
-        id.set(encounterID)
-        encounterName.set(query.name)
-        println(controller.getEncounterCharacters(encounterID))
-        tableData.setAll(controller.getEncounterCharacters(encounterID))
-        characterData.setAll(controller.getCharacterList(encounterID))
-        npcData.setAll(controller.getNpcList(encounterID))
-    }
-
-    val tableData = controller.getEncounterCharacters(this.id.value)
-    val characterData = controller.getCharacterList(this.id.value)
-    val npcData = controller.getNpcList(this.id.value)
+    private val tableData = controller.getEncounterCharacters(this.id.value)
+    private val characterData = controller.getCharacterList(this.id.value)
+    private val npcData = controller.getNpcList()
 
     override val root = vbox(10) {
         addClass(Style.view)
@@ -45,14 +29,42 @@ class SingleEncounterView :  View() {
         }
 
         // Encounter tracker
+        // Controls
+        hbox(20) {
+            button("Roll Initiative") {
+                action {
+                    controller.rollInitiative(this@SingleEncounterView.id.value)
+                    refreshEncounterCharacters()
+                }
+            }
+            button("Roll Initiative Where Empty") {
+                action {
+                    controller.rollNulledInitiative(this@SingleEncounterView.id.value)
+                    refreshEncounterCharacters()
+                }
+            }
+        }
         tableview(tableData) {
-            readonlyColumn("ID", SelectCharactersIn::id)
+            readonlyColumn("Initiative", SelectCharactersIn::initiative)
             readonlyColumn("Name", SelectCharactersIn::name)
+            readonlyColumn("Health", SelectCharactersIn::current_health)
+            readonlyColumn("Max Health", SelectCharactersIn::max_health)
+            readonlyColumn("Action", SelectCharactersIn::id_).cellFormat {
+                graphic = hbox(spacing = 5) {
+                    button("Delete") {
+                        action {
+                            controller.removeCharacterFromEncounter(it)
+                            refreshEncounterCharacters()
+                            refreshCharacters()
+                        }
+                    }
+                }
+            }
         }
 
-        // Character adder
         hbox(20) {
             vbox(10){
+                // Character adder
                 label("Add Player Characters")
                 tableview(characterData) {
                     readonlyColumn("ID", SelectCharactersNotIn::id)
@@ -72,18 +84,18 @@ class SingleEncounterView :  View() {
                 }
             }
             vbox(10){
+                // NPC adder
                 label("Add Non Player Characters")
                 tableview(npcData) {
-                    readonlyColumn("ID", SelectNPCNotIn::id)
-                    readonlyColumn("Name", SelectNPCNotIn::name)
-                    readonlyColumn("Action", SelectNPCNotIn::id).cellFormat {
+                    readonlyColumn("ID", SelectAllCharactersWithTemplate::id)
+                    readonlyColumn("Name", SelectAllCharactersWithTemplate::name)
+                    readonlyColumn("Action", SelectAllCharactersWithTemplate::id).cellFormat {
                         graphic = hbox(spacing = 5) {
                             button("Add") {
                                 action {
                                     println("Adding character $it to encounter ${this@SingleEncounterView.id.value}")
                                     controller.addCharacterToEncounter(it, this@SingleEncounterView.id.value)
                                     refreshEncounterCharacters()
-                                    refreshNPCharacters()
                                 }
                             }
                         }
@@ -93,6 +105,16 @@ class SingleEncounterView :  View() {
         }
     }
 
+    fun setEncounter(encounterID: Long) {
+        val encounter = controller.getEncounterByID(encounterID)
+        id.set(encounterID)
+        encounterName.set(encounter.name)
+        println(controller.getEncounterCharacters(encounterID))
+        tableData.setAll(controller.getEncounterCharacters(encounterID))
+        characterData.setAll(controller.getCharacterList(encounterID))
+        npcData.setAll(controller.getNpcList())
+    }
+
     private fun refreshEncounterCharacters() {
         println("Refreshing characters on encounter ${this.id.value}")
         tableData.setAll(controller.getEncounterCharacters(this.id.value))
@@ -100,9 +122,5 @@ class SingleEncounterView :  View() {
 
     private fun refreshCharacters() {
         characterData.setAll(controller.getCharacterList(this.id.value))
-    }
-
-    private fun refreshNPCharacters() {
-        npcData.setAll(controller.getNpcList(this.id.value))
     }
 }
