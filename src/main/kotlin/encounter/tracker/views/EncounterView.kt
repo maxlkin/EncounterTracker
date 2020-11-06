@@ -17,7 +17,7 @@ class EncounterView :  View() {
 
     var tableData = controller.getEncounterList()
 
-    override val root = vbox {
+    override val root = vbox(10) {
         addClass(Style.view)
         // Heading
         label("Encounter view") {
@@ -38,18 +38,18 @@ class EncounterView :  View() {
         }
         // Control Buttons
         hbox(20) {
-            button("Add Character") {
+            button("Add Encounter") {
                 action {
                     try {
                         controller.addEncounter(getSelectedEncounter())
                     } catch (e: Exception) {
                         alert(Alert.AlertType.ERROR, "There was a problem creating the character", e.message)
                     }
-                    idField.text = "-"
+                    idField.text = ""
                     tableData.setAll(controller.getEncounterList())
                 }
             }
-            button("Update Character") {
+            button("Update Encounter") {
                 action {
                     try {
                         //controller.updateCharacter(getSelectedEncounter())
@@ -86,6 +86,8 @@ class EncounterView :  View() {
                 nameField.text = this.selectedItem?.name
                 encounterName = this.selectedItem?.name ?: "Unknown"
                 idField.text = this.selectedItem?.id.toString()
+                idField.isEditable = false
+                idField.isDisable = true
             }
         }
     }
