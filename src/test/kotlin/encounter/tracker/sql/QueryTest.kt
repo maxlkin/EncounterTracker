@@ -24,14 +24,13 @@ class QueryTest {
     }
 
     /**
-     * Testing selecting all characters.
+     * Testing selecting all player characters.
      */
     @Test
     fun testSelectCharacters() {
         val characters = Database.query(driver).selectAllCharacters().executeAsList()
-        assertEquals(2, characters.size)
+        assertEquals(1, characters.size)
         assertEquals("TestChar1", characters[0].name)
-        assertEquals("TestChar2", characters[1].name)
     }
 
     /**
