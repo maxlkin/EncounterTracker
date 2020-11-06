@@ -15,7 +15,7 @@ class EncounterController: Controller() {
         return Database.query(driver).selectAllEncounters().executeAsList().asObservable()
     }
 
-    fun getEncounterByID(id: Long, driver: JdbcSqliteDriver = Database.getConnection()): SelectEncounterByID {
+    fun getEncounterByID(id: Long, driver: JdbcSqliteDriver = Database.getConnection()): Encounter {
         return Database.query(driver).selectEncounterByID(id).executeAsOne()
     }
 
@@ -25,6 +25,10 @@ class EncounterController: Controller() {
 
     fun addCharacterToEncounter(characterID: Long, encounterID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
         Database.query(driver).addCharacterToEncounter(characterID, encounterID)
+    }
+
+    fun getEncounterCharacters(encounterID: Long, driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<SelectCharactersIn> {
+        return Database.query(driver).selectCharactersIn(encounterID).executeAsList().asObservable()
     }
 
     fun getCharacterList(id: Long , driver: JdbcSqliteDriver = Database.getConnection()): ObservableList<SelectCharactersNotIn> {

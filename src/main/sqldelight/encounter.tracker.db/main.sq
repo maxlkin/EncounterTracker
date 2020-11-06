@@ -146,8 +146,6 @@ FROM encounter;
 selectEncounterByID:
 SELECT *
 FROM encounter
-LEFT JOIN characterEncounterList ON encounter.id = characterEncounterList.encounter_id
-LEFT JOIN character ON character.id = characterEncounterList.character_id
 WHERE encounter.id = ?;
 
 insertEncounter:
@@ -173,7 +171,8 @@ OR characterEncounterList.encounter_id IS NOT ?);
 selectCharactersIn:
 SELECT *
 FROM character
-INNER JOIN characterEncounterList ON character.id = character_id;
+INNER JOIN characterEncounterList ON character.id = characterEncounterList.character_id
+WHERE encounter_id = ?;
 
 addCharacterToEncounter:
 INSERT INTO characterEncounterList ( character_id, encounter_id )

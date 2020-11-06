@@ -21,17 +21,35 @@ class EncounterControllerTest {
     fun setup() {
         driver = Database.getTestConnection()
         controller = EncounterController()
-        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null)
-        Database.query(driver).insertTemplate("TestTemplate1", "Test Template")
+        // Add encounter
         Database.query(driver).insertEncounter("TestEncounter1" )
+        // Add players
+        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null)
+        Database.query(driver).insertCharacter("TestChar2", 10, 2, 10, 6, null)
+        // Add player to encounter
         Database.query(driver).addCharacterToEncounter(1, 1 )
-        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4, 1)
+        // Add NPC
+        Database.query(driver).insertTemplate("TestTemplate1", "Test Template")
+        Database.query(driver).insertCharacter("TestNPC1", 5, -2, 10, 4, 1)
     }
 
     @Test
     fun testGetCharacterList() {
         val characters = controller.getCharacterList(1, driver)
-        println(characters)
+        assertEquals(1, characters.size)
+        assertEquals("TestChar2", characters[0].name)
+    }
+
+    @Test
+    fun testGetNPCList() {
+        val characters = controller.getNpcList(1, driver)
+        assertEquals(1, characters.size)
+        assertEquals("TestNPC1", characters[0].name)
+    }
+
+    @Test
+    fun testGetEncounterCharacters() {
+        val characters = controller.getEncounterCharacters(1, driver)
         assertEquals(1, characters.size)
         assertEquals("TestChar1", characters[0].name)
     }
