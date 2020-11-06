@@ -52,7 +52,7 @@ class EncounterView :  View() {
             button("Update Encounter") {
                 action {
                     try {
-                        //controller.updateCharacter(getSelectedEncounter())
+                        controller.updateEncounter(getSelectedEncounter())
                     } catch (e: Exception) {
                         alert(Alert.AlertType.ERROR, "There was a problem updating the character", e.message)
                     }
@@ -93,7 +93,7 @@ class EncounterView :  View() {
     }
 
     private fun getSelectedEncounter(): EncounterModel {
-        return EncounterModel(null, nameField.text)
+        return EncounterModel(idField.text, nameField.text)
     }
 
     private fun clearSelection() {

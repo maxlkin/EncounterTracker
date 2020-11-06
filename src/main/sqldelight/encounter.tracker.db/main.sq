@@ -143,6 +143,11 @@ selectAllEncounters:
 SELECT *
 FROM encounter;
 
+updateEncounter:
+UPDATE encounter
+SET name = ?
+WHERE id = ?;
+
 selectEncounterByID:
 SELECT *
 FROM encounter

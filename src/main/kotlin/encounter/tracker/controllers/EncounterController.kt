@@ -1,6 +1,5 @@
 package encounter.tracker.controllers
 
-import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import encounter.tracker.database.Database
 import encounter.tracker.models.EncounterModel
@@ -97,6 +96,10 @@ class EncounterController: Controller() {
         Database.query(driver).insertEncounter(
                 encounter.name,
         )
+    }
+
+    fun updateEncounter(encounter: EncounterModel, driver: JdbcSqliteDriver = Database.getConnection()) {
+        Database.query(driver).updateEncounter(encounter.name, encounter.id.toLong())
     }
 
     fun setCharacterHealth(health: Long, characterID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
