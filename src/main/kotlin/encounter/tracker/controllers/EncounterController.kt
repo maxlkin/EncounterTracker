@@ -25,18 +25,15 @@ class EncounterController: Controller() {
         return Database.query(driver).selectAllCharactersWithTemplate().executeAsList().asObservable()
     }
 
-    /**
-     *
-     */
     fun addCharacterToEncounter(characterID: Long, encounterID: Long, copy: Boolean = false,  driver: JdbcSqliteDriver = Database.getConnection()) {
         if (copy) {
             // Add a copy of a character
             val character = Database.query(driver).selectCharacterByID(characterID).executeAsOne()
             // Insert copy
             Database.query(driver).insertCharacter(character.name, character.armor_class, character.initiative_modifier, character.max_health, character.current_health, character.character_template_id, character.id)
-            val copy_id = Database.query(driver).lastInsertRowId().executeAsOne()
+            val copyID = Database.query(driver).lastInsertRowId().executeAsOne()
             // Add copy to encounter
-            Database.query(driver).addCharacterToEncounter(copy_id, encounterID)
+            Database.query(driver).addCharacterToEncounter(copyID, encounterID)
         } else {
             // Add original character
             Database.query(driver).addCharacterToEncounter(characterID, encounterID)

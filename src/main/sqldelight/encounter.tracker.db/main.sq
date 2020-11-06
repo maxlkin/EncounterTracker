@@ -101,7 +101,7 @@ SELECT *
 FROM character
 INNER JOIN characterTemplate
 ON character.character_template_id = characterTemplate.id
-WHERE character_template_id IS NOT NULL;
+WHERE character_template_id IS NOT NULL AND copy IS NULL;
 
 selectCharactersWithTemplate:
 SELECT *
