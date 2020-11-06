@@ -49,7 +49,7 @@ class TemplateView : View() {
                     try {
                         controller.addTemplate(getSelectedTemplate())
                     } catch (e: Exception) {
-                        alert(Alert.AlertType.ERROR, "There was a problem creating the template", e.message)
+                        alert(Alert.AlertType.ERROR, "There was a problem creating the template", e.message, owner = this@TemplateView.currentStage)
                     }
                     idField.text = "-"
                     tableData.setAll(controller.getTemplateList())
@@ -60,7 +60,7 @@ class TemplateView : View() {
                     try {
                         controller.updateTemplate(getSelectedTemplate())
                     } catch (e: Exception) {
-                        alert(Alert.AlertType.ERROR, "There was a problem updating the character", e.message)
+                        alert(Alert.AlertType.ERROR, "There was a problem updating the character", e.message, owner = this@TemplateView.currentStage)
                     }
                     tableData.setAll(controller.getTemplateList())
                 }

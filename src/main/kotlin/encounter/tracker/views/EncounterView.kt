@@ -43,7 +43,7 @@ class EncounterView :  View() {
                     try {
                         controller.addEncounter(getSelectedEncounter())
                     } catch (e: Exception) {
-                        alert(Alert.AlertType.ERROR, "There was a problem creating the character", e.message)
+                        alert(Alert.AlertType.ERROR, "There was a problem creating the character", e.message, owner = this@EncounterView.currentStage)
                     }
                     idField.text = ""
                     tableData.setAll(controller.getEncounterList())
@@ -54,7 +54,7 @@ class EncounterView :  View() {
                     try {
                         controller.updateEncounter(getSelectedEncounter())
                     } catch (e: Exception) {
-                        alert(Alert.AlertType.ERROR, "There was a problem updating the character", e.message)
+                        alert(Alert.AlertType.ERROR, "There was a problem updating the character", e.message, owner = this@EncounterView.currentStage)
                     }
                     tableData.setAll(controller.getEncounterList())
                 }
