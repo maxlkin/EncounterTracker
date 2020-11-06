@@ -24,13 +24,13 @@ class EncounterControllerTest {
         // Add encounter
         Database.query(driver).insertEncounter("TestEncounter1" )
         // Add players
-        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null)
-        Database.query(driver).insertCharacter("TestChar2", 10, 2, 10, 6, null)
+        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null, null)
+        Database.query(driver).insertCharacter("TestChar2", 10, 2, 10, 6, null, null)
         // Add player to encounter
         Database.query(driver).addCharacterToEncounter(1, 1 )
         // Add NPC
         Database.query(driver).insertTemplate("TestTemplate1", "Test Template")
-        Database.query(driver).insertCharacter("TestNPC1", 5, -2, 10, 4, 1)
+        Database.query(driver).insertCharacter("TestNPC1", 5, -2, 10, 4, 1, null)
     }
 
     @Test
@@ -42,7 +42,7 @@ class EncounterControllerTest {
 
     @Test
     fun testGetNPCList() {
-        val characters = controller.getNpcList(1, driver)
+        val characters = controller.getNpcList(driver)
         assertEquals(1, characters.size)
         assertEquals("TestNPC1", characters[0].name)
     }
