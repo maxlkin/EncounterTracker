@@ -50,7 +50,7 @@ class EncounterController: Controller() {
         } else {
             // Remove copied character as well as listing.
             Database.query(driver).removeCharacterFromEncounter(listID)
-            Database.query(driver).removeCharacterFromEncounter(character.id)
+            Database.query(driver).deleteCharacterByID(character.id)
         }
         Database.query(driver).removeCharacterFromEncounter(listID)
     }
