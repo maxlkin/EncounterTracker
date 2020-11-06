@@ -18,9 +18,9 @@ class QueryTest {
     @Before
     fun setup() {
         driver = Database.getTestConnection()
-        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null)
+        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null, null)
         Database.query(driver).insertTemplate("Goblin", "A testing goblin template.")
-        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4, 1)
+        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4, 1, null)
     }
 
     /**
@@ -48,7 +48,7 @@ class QueryTest {
      */
     @Test
     fun testInsertCharacter() {
-        Database.query(driver).insertCharacter("InsertCharTest", 0, 0, 0, 0, null)
+        Database.query(driver).insertCharacter("InsertCharTest", 0, 0, 0, 0, null, null)
         val character = Database.query(driver).selectCharacterByID(3).executeAsOne()
         assertEquals("InsertCharTest", character.name)
     }

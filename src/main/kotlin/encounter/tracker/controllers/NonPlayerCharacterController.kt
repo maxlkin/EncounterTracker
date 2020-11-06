@@ -112,7 +112,8 @@ class NonPlayerCharacterController: Controller() {
             character.initiative,
             character.maxHealth,
             character.currentHealth,
-            character.characterTemplateID
+            character.characterTemplateID,
+            null
         )
     }
 

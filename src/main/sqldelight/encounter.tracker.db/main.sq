@@ -7,6 +7,7 @@ CREATE TABLE character (
     max_health INTEGER NOT NULL,
     current_health INTEGER NOT NULL,
     character_template_id INTEGER,
+    copy INTEGER,
     FOREIGN KEY (character_template_id) REFERENCES characterTemplate(id)
 );
 
@@ -56,11 +57,12 @@ CREATE TABLE encounter (
 -- Characters
 selectAllCharacters:
 SELECT *
-FROM character;
+FROM character
+WHERE character_template_id IS NULL;
 
 insertCharacter:
-INSERT INTO character( name, armor_class, initiative_modifier, max_health, current_health, character_template_id )
-VALUES ( ?, ?, ?, ?, ?, ? );
+INSERT INTO character( name, armor_class, initiative_modifier, max_health, current_health, character_template_id, copy )
+VALUES ( ?, ?, ?, ?, ?, ?, ? );
 
 selectCharacterByID:
 SELECT *
@@ -99,7 +101,7 @@ SELECT *
 FROM character
 INNER JOIN characterTemplate
 ON character.character_template_id = characterTemplate.id
-WHERE character_template_id IS NOT NULL;
+WHERE character_template_id IS NOT NULL AND copy IS NULL;
 
 selectCharactersWithTemplate:
 SELECT *
@@ -135,3 +137,72 @@ updateTemplateByID:
 UPDATE characterTemplate
 SET type = ?, description = ?
 WHERE id = ?;
+
+-- Encounters
+selectAllEncounters:
+SELECT *
+FROM encounter;
+
+selectEncounterByID:
+SELECT *
+FROM encounter
+WHERE encounter.id = ?;
+
+insertEncounter:
+INSERT INTO encounter( name )
+VALUES ( ? );
+
+selectCharactersNotIn:
+SELECT *
+FROM character
+LEFT JOIN characterEncounterList ON characterEncounterList.character_id = character.id
+WHERE character_template_id IS NULL
+AND (characterEncounterList.encounter_id IS NULL
+OR characterEncounterList.encounter_id IS NOT ?);
+
+selectNPCNotIn:
+SELECT *
+FROM character
+LEFT JOIN characterEncounterList ON characterEncounterList.character_id = character.id
+WHERE character_template_id IS NOT NULL
+AND (characterEncounterList.encounter_id IS NULL
+OR characterEncounterList.encounter_id IS NOT ?);
+
+selectCharactersIn:
+SELECT *
+FROM character
+INNER JOIN characterEncounterList ON character.id = characterEncounterList.character_id
+LEFT JOIN characterTemplate ON character.character_template_id = characterTemplate.id
+WHERE encounter_id = ?;
+
+addCharacterToEncounter:
+INSERT INTO characterEncounterList ( character_id, encounter_id )
+VALUES ( ?, ? );
+
+removeCharacterFromEncounter:
+DELETE FROM characterEncounterList
+WHERE id = ?;
+
+setInitiative:
+UPDATE characterEncounterList
+SET initiative = ?
+WHERE id = ?;
+
+selectCharacterListing:
+SELECT *
+FROM characterEncounterList
+WHERE id = ?;
+
+setCharacterHealth:
+UPDATE character
+SET current_health = ?
+WHERE id = ?;
+
+getCharacterHealth:
+SELECT current_health
+FROM character
+WHERE id = ?;
+
+-- Helper
+lastInsertRowId:
+SELECT last_insert_rowid();
