@@ -172,6 +172,7 @@ selectCharactersIn:
 SELECT *
 FROM character
 INNER JOIN characterEncounterList ON character.id = characterEncounterList.character_id
+LEFT JOIN characterTemplate ON character.character_template_id = characterTemplate.id
 WHERE encounter_id = ?;
 
 addCharacterToEncounter:

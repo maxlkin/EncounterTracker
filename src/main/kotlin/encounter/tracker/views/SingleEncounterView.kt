@@ -69,6 +69,7 @@ class SingleEncounterView :  View() {
             }
 
             readonlyColumn("Max Health", SelectCharactersIn::max_health)
+            readonlyColumn("Template", SelectCharactersIn::type)
             readonlyColumn("Action", SelectCharactersIn::id_).cellFormat {
                 graphic = hbox(spacing = 5) {
                     button("Delete") {
