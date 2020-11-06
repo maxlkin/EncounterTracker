@@ -83,6 +83,9 @@ class EncounterController: Controller() {
         }
     }
 
+    fun getCharacterHealth(characterID: Long, driver: JdbcSqliteDriver = Database.getConnection()): Long {
+        return Database.query(driver).getCharacterHealth(characterID).executeAsOne()
+    }
 
     @Throws(Exception::class)
     fun addEncounter(encounter: EncounterModel, driver: JdbcSqliteDriver = Database.getConnection()) {
@@ -94,5 +97,9 @@ class EncounterController: Controller() {
         Database.query(driver).insertEncounter(
                 encounter.name,
         )
+    }
+
+    fun setCharacterHealth(health: Long, characterID: Long, driver: JdbcSqliteDriver = Database.getConnection()) {
+        Database.query(driver).setCharacterHealth(health, characterID)
     }
 }

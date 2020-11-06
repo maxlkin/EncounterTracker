@@ -5,6 +5,7 @@ import encountertrackerdb.*
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.scene.control.Alert
 import javafx.scene.control.TextField
 import tornadofx.*
 
@@ -45,9 +46,28 @@ class SingleEncounterView :  View() {
             }
         }
         tableview(tableData) {
+            isEditable = true
             readonlyColumn("Initiative", SelectCharactersIn::initiative)
             readonlyColumn("Name", SelectCharactersIn::name)
-            readonlyColumn("Health", SelectCharactersIn::current_health)
+            readonlyColumn("Health", SelectCharactersIn::id).cellFormat {
+                graphic = hbox(spacing = 5) {
+                    textfield {
+                        var health = controller.getCharacterHealth(it)
+                        text = health.toString()
+                        action {
+                            try {
+                                health = this.text.toLong()
+                                controller.setCharacterHealth(health, it)
+                                refreshEncounterCharacters()
+                            } catch (e: NumberFormatException) {
+                                alert(Alert.AlertType.ERROR, "Error updating health", "Character health not formatted correctly. Is it blank or contains letters?")
+                            }
+
+                        }
+                    }
+                }
+            }
+
             readonlyColumn("Max Health", SelectCharactersIn::max_health)
             readonlyColumn("Action", SelectCharactersIn::id_).cellFormat {
                 graphic = hbox(spacing = 5) {
@@ -109,14 +129,12 @@ class SingleEncounterView :  View() {
         val encounter = controller.getEncounterByID(encounterID)
         id.set(encounterID)
         encounterName.set(encounter.name)
-        println(controller.getEncounterCharacters(encounterID))
         tableData.setAll(controller.getEncounterCharacters(encounterID))
         characterData.setAll(controller.getCharacterList(encounterID))
         npcData.setAll(controller.getNpcList())
     }
 
     private fun refreshEncounterCharacters() {
-        println("Refreshing characters on encounter ${this.id.value}")
         tableData.setAll(controller.getEncounterCharacters(this.id.value))
     }
 

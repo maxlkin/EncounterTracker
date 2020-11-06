@@ -192,6 +192,16 @@ SELECT *
 FROM characterEncounterList
 WHERE id = ?;
 
+setCharacterHealth:
+UPDATE character
+SET current_health = ?
+WHERE id = ?;
+
+getCharacterHealth:
+SELECT current_health
+FROM character
+WHERE id = ?;
+
 -- Helper
 lastInsertRowId:
 SELECT last_insert_rowid();

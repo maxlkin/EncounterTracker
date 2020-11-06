@@ -23,8 +23,8 @@ class CharacterControllerTest {
     fun setup() {
         driver = Database.getTestConnection()
         controller = CharacterController()
-        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null)
-        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4, null)
+        Database.query(driver).insertCharacter("TestChar1", 10, 2, 10, 6, null, null)
+        Database.query(driver).insertCharacter("TestChar2", 5, -2, 10, 4, null, null)
     }
 
     @Test
